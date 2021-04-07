@@ -160,7 +160,7 @@ Lista* intersLista(Lista* l1, Lista* l2){
     return listaInters;
 }
 
-int main(){
+int mainn(){
     int n, n2;
     Lista* l = criarLista();
     Lista* l2 = criarLista();
