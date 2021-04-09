@@ -19,13 +19,11 @@ struct no{
 
 struct lista{
     No* inicio;
-    No* fim;
 };
 
 Lista* criarLista(){
     Lista* l = malloc(sizeof(Lista));
     l->inicio=NULL;
-    l->fim=NULL;
     return l;
 }
 

@@ -6,6 +6,10 @@
 	objectVersion = 50;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		79A85363261E744500280C30 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 79A85362261E744500280C30 /* main.c */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		798534D2261BC62900356050 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -22,6 +26,7 @@
 		798534D4261BC62900356050 /* Algoritmo e Estrutura de Dados II */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Algoritmo e Estrutura de Dados II"; sourceTree = BUILT_PRODUCTS_DIR; };
 		798534D7261BC62900356050 /* mainn.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = mainn.c; path = "/Users/guilherme/Documents/aedExercicios/Algoritmo e Estrutura de Dados II/Algoritmo e Estrutura de Dados II/Treino-01/mainn.c"; sourceTree = "<absolute>"; };
 		798534EA261D05E100356050 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = main.c; path = "/Users/guilherme/Documents/aedExercicios/Algoritmo e Estrutura de Dados II/Algoritmo e Estrutura de Dados II/Treino-02/main.c"; sourceTree = "<absolute>"; };
+		79A85362261E744500280C30 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +59,7 @@
 		798534D6261BC62900356050 /* Algoritmo e Estrutura de Dados II */ = {
 			isa = PBXGroup;
 			children = (
+				79A85360261E742900280C30 /* Treino-03 */,
 				798534E0261CFF7600356050 /* Treino-02 */,
 				798534DF261BC6A100356050 /* Treino-01 */,
 			);
@@ -74,6 +80,14 @@
 				798534EA261D05E100356050 /* main.c */,
 			);
 			path = "Treino-02";
+			sourceTree = "<group>";
+		};
+		79A85360261E742900280C30 /* Treino-03 */ = {
+			isa = PBXGroup;
+			children = (
+				79A85362261E744500280C30 /* main.c */,
+			);
+			path = "Treino-03";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -132,6 +146,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79A85363261E744500280C30 /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
