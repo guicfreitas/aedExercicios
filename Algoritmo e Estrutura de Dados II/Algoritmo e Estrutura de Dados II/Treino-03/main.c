@@ -159,35 +159,64 @@ void palavrasRecorrentes(Lista* l, Lista* listaPalavras){
     }
 }
 
+void separarPalavra (Lista* l,Lista* listaPalavras, char palavra[]){
+    int cont = 0;
+    int contInicial = 0;
+    char palavra1[50];
+    char palavra2[50] = "\0";
+    int i = 0;
+    
+    while(cont < strlen(palavra) && palavra[cont] != ':' && palavra[cont] != ',' && palavra[cont] != '.' && palavra[cont] != '.' && palavra[cont] != '-' && palavra[cont] != '?' && palavra[cont] != '!'){
+        cont++;
+    }
+    
+    strncpy(palavra1, palavra,cont);
+    contInicial = cont;
+    for(cont = cont+1  ;cont < strlen(palavra);cont++){
+        palavra2[i] = palavra[cont];
+        i++;
+    }
+    
+    inserirFim(l, palavra1);
+    inserirFim(listaPalavras, palavra1);
+    
+    if(contInicial <= strlen(palavra2)){
+        inserirFim(l, palavra2);
+        inserirFim(listaPalavras, palavra2);
+    }
+    
+}
+
 int main(){
     char texto[100] = "";
-    int cont = 0;
-   
+    int temPonto = 0;
     
     Lista* l = criarLista();
     Lista* listaPalvras = criarLista();
-    char textoTemp[100] = "";
+    
     
     while(scanf("%s",texto)!=EOF){
-        while(cont < strlen(texto) && texto[cont] != ':' && texto[cont] != ',' && texto[cont] != '.' && texto[cont] != '.' && texto[cont] != '-' && texto[cont] != '?' && texto[cont] != '!'){
-            cont += 1;
+        temPonto = 0;
+        for(int cont = 0;cont<strlen(texto);cont++){
+            if(texto[cont] == ':' || texto[cont] == ',' || texto[cont] == '.' || texto[cont] == '-' || texto[cont] == '?' || texto[cont] == '!'){
+                temPonto = 1;
+            }
         }
-        strncpy(textoTemp, texto, cont);
         
-            inserirFim(l, textoTemp);
-            inserirFim(listaPalvras, textoTemp);
+        if(temPonto == 0){
+            inserirFim(l, texto);
+            inserirFim(listaPalvras, texto);
+        }else{
+            separarPalavra(l, listaPalvras, texto);
+        }
         
-            
         
         
     }
-    if(strcmp(textoTemp, "")!=0){
-        removeRepetido(l);
-        palavrasRecorrentes(l, listaPalvras);
-        imprimirLista(l);
-    }
     
-    
+    removeRepetido(l);
+    palavrasRecorrentes(l, listaPalvras);
+    imprimirLista(l);
     
     
     return 0;
