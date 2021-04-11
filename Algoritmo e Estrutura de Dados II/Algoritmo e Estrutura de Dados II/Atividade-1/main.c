@@ -32,7 +32,7 @@ struct listaPilotos{
 int gerarNumero(int max){
     int random = 0;
     
-    //srand ( (unsigned int) time(NULL) );
+    
      random = rand()%max;
     
     return random;
@@ -109,25 +109,31 @@ ListaPilotos* TotalCarros(){
 }
 
 void imprimirPilotos(ListaPilotos* l){
+    int cont = 1;
     Piloto* temp = l-> inicio;
     printf("-----------------------------");
     printf("\n");
     printf("| pos. | plto | eqp | tempo |\n");
     if(temp != NULL){
         if(temp->proxPiloto == NULL){
-            printf("|  %02d  |  %02d  |  %c  | %d |\n", temp->numero,temp->numero,temp->equipe,temp->tempo);
+            printf("|  %02d  |  %02d  |  %c  | %d |\n",cont,temp->numero,temp->equipe,temp->tempo);
             
         }else{
-            printf("|  %02d  |  %02d  |  %c  | %d |\n", temp->numero,temp->numero,temp->equipe,temp->tempo);
+            printf("|  %02d  |  %02d  |  %c  | %d |\n", cont,temp->numero,temp->equipe,temp->tempo);
                 temp = temp->proxPiloto;
+            cont++;
             while(temp != NULL){
-                printf("|  %02d  |  %02d  |  %c  | %d |\n", temp->numero,temp->numero,temp->equipe,temp->tempo);
+                if(temp->vaiCorrer == 0){
+                printf("|  %02d  |  %02d  |  %c  | %d |\n", cont,temp->numero,temp->equipe,temp->tempo);
+                    cont++;
+
+                }
                 temp = temp->proxPiloto;
             }
         }
         
     }
-    printf("-----------------------------");
+    printf("-----------------------------\n");
     
 }
 ListaPilotos* criarLista(){
@@ -194,10 +200,10 @@ void gerarVolta(ListaPilotos* listaTotal, int numeroDePilotos){
     int igual = 1;
     ListaPilotos* listaVolta = criarLista();
     while(cont < numeroDePilotos){
-        pilotoAleatorio = gerarNumero(quantidadePilotos(listaTotal));
+        pilotoAleatorio = gerarNumero(quantidadePilotos(listaTotal)+1);
         igual = verificaIgualdade(listaVolta, pilotoAleatorio);
         while(igual == 0){
-            pilotoAleatorio = gerarNumero(quantidadePilotos(listaTotal));
+            pilotoAleatorio = gerarNumero(quantidadePilotos(listaTotal)+1);
             igual = verificaIgualdade(listaVolta, pilotoAleatorio);
         }
         
@@ -205,7 +211,10 @@ void gerarVolta(ListaPilotos* listaTotal, int numeroDePilotos){
         cont++;
     }
     guardarMenorTempo(listaTotal, listaVolta);
-    excluirLista(listaVolta);
+    if(listaVolta->inicio != NULL){
+        excluirLista(listaVolta);
+    }
+    
 }
 void Qualify(ListaPilotos* listaTotal, int voltas){
     int numeroDeCarrosVolta = 0;
@@ -217,14 +226,169 @@ void Qualify(ListaPilotos* listaTotal, int voltas){
     }
 }
 
+void troca(ListaPilotos* l,Piloto* p1, Piloto* p2,Piloto* pAnterior){
+    
+    if(p1 == l->inicio){
+        p1->proxPiloto = p2->proxPiloto;
+        p2->proxPiloto = p1;
+        l->inicio = p2;
+    }else if(p2->proxPiloto == NULL){
+        pAnterior->proxPiloto = p2;
+        p2->proxPiloto = p1;
+        p1->proxPiloto = NULL;
+    }else{
+        p1->proxPiloto = p2->proxPiloto;
+        pAnterior->proxPiloto = p2;
+        p2->proxPiloto = p1;
+    }
+}
+void ordernaLista(ListaPilotos* l){
+   
+    Piloto* anterior = l->inicio;
+    
+    for(Piloto* i = l->inicio;i != NULL;i=i->proxPiloto){
+        anterior = l->inicio;
+        for(Piloto* j = l->inicio->proxPiloto;j!=NULL;j=j->proxPiloto){
+            if(j->tempo < i->tempo){
+                troca(l, i, j, anterior);
+            }
+            anterior = j;
+        }
+    }
+    
+}
+
+void removePiloto(ListaPilotos* l, Piloto* pilotoRemovido){
+    Piloto* pAtual = l->inicio->proxPiloto;
+    Piloto* pAnterior = l->inicio;
+    
+    if(l->inicio == pilotoRemovido){
+        l->inicio = pilotoRemovido->proxPiloto;
+        free(pilotoRemovido);
+    }else{
+        while(pAtual != pilotoRemovido && pAtual != NULL){
+            pAnterior = pAtual;
+            pAtual = pAtual->proxPiloto;
+        }
+        
+        
+        
+        if(pilotoRemovido!=NULL){
+            pAnterior->proxPiloto = pilotoRemovido->proxPiloto;
+            free(pilotoRemovido);
+        }
+    }
+}
+
+Piloto* ultimoElemento(ListaPilotos* l){
+    Piloto* pUltimo = l->inicio;
+    while(pUltimo->proxPiloto != NULL){
+        pUltimo = pUltimo->proxPiloto;
+    }
+    return pUltimo;
+}
+
+void claSort(ListaPilotos* l){
+    Piloto* p = l->inicio;
+    Piloto* pComMenorTempo;
+    Piloto* pMenorAtual = p;
+    int menorTempo = p->tempo;
+    p = p->proxPiloto;
+    //primeiro Menor
+    
+    while(p != NULL){
+        if(p->tempo < menorTempo){
+            menorTempo = p->tempo;
+            pMenorAtual = p;
+        }
+        p = p->proxPiloto;
+    }
+    
+    inserirFim(l, pMenorAtual->tempo, pMenorAtual->numero, pMenorAtual->equipe, pMenorAtual->vaiCorrer);
+    removePiloto(l, pMenorAtual);
+    pComMenorTempo = ultimoElemento(l);
+    
+    
+        p = l->inicio;
+        menorTempo = p->tempo;
+        while(l->inicio != pComMenorTempo){
+            p = l->inicio;
+            menorTempo = p->tempo;
+            pMenorAtual = p;
+            while (p->proxPiloto != NULL && p != pComMenorTempo) {
+                if(p->tempo < menorTempo){
+                    menorTempo = p->tempo;
+                    pMenorAtual = p;
+                }
+                p = p->proxPiloto;
+                
+            }
+            
+            inserirFim(l, pMenorAtual->tempo, pMenorAtual->numero, pMenorAtual->equipe, pMenorAtual->vaiCorrer);
+            removePiloto(l, pMenorAtual);
+            
+        }
+    
+}
+
+void elimina7(ListaPilotos* l,int ate){
+    Piloto* pAtual = l->inicio;
+    int cont = 1;
+    while(pAtual != NULL){
+        if(cont > ate){
+            pAtual->vaiCorrer = 1;
+        }
+        pAtual = pAtual->proxPiloto;
+        cont++;
+    }
+}
+
+void liberaTodos(ListaPilotos* l){
+    Piloto* p = l->inicio;
+    while(p!=NULL){
+        p->vaiCorrer = 0;
+        p = p->proxPiloto;
+    }
+}
+
 int main(){
-    
+    int flag = 0;
+    srand ((unsigned int)time(NULL) );
     ListaPilotos* l = TotalCarros();
-    imprimirPilotos(l);
+    //imprimirPilotos(l);
+    scanf("%d",&flag);
+    if(flag == 1){
+        printf("Q1\n");
+        Qualify(l, QUALIFY1);
+        //imprimirPilotos(l);
+        claSort(l);
+        imprimirPilotos(l);
+        
+        elimina7(l,17);
+        
+        Qualify(l, QUALIFY2);
+        printf("Q2\n");
+        claSort(l);
+        imprimirPilotos(l);
+        elimina7(l,10);
+        
+        Qualify(l, QUALIFY3);
+        printf("Q3\n");
+        claSort(l);
+        imprimirPilotos(l);
+       
+        printf("GRID LARGADA\n");
+        liberaTodos(l);
+        imprimirPilotos(l);
+        
+    }
     
-    Qualify(l, QUALIFY1);
-    imprimirPilotos(l);
+    
+    
+    
     
     return 0;
 }
+
+
 

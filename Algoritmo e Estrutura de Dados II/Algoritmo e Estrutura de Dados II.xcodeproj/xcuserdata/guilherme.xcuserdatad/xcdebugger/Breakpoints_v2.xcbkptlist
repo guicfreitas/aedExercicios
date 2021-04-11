@@ -110,8 +110,8 @@
             filePath = "Algoritmo e Estrutura de Dados II/Atividade-1/main.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "221"
-            endingLineNumber = "221"
+            startingLineNumber = "355"
+            endingLineNumber = "355"
             landmarkName = "main()"
             landmarkType = "9">
          </BreakpointContent>
@@ -126,8 +126,8 @@
             filePath = "Algoritmo e Estrutura de Dados II/Atividade-1/main.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "214"
-            endingLineNumber = "214"
+            startingLineNumber = "223"
+            endingLineNumber = "223"
             landmarkName = "Qualify(listaTotal, voltas)"
             landmarkType = "9">
          </BreakpointContent>
