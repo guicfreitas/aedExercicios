@@ -13,6 +13,7 @@
 #define QUALIFY3 5
 #define NUMERO_PILOTOS 24
 
+
 typedef struct piloto Piloto;
 typedef struct listaPilotos ListaPilotos;
 
@@ -29,11 +30,11 @@ struct listaPilotos{
     Piloto* inicio;
 };
 
-int gerarNumero(int max){
+int gerarNumero(int min,int max){
     int random = 0;
     
     
-     random = rand()%max;
+     random = (min + (rand()%max));
     
     return random;
 }
@@ -90,10 +91,10 @@ ListaPilotos* TotalCarros(){
         
         
         if (contLetra == 0){
-            equipeRand = gerarNumero(25);
+            equipeRand = gerarNumero(0,25);
             equipePiloto = equipes[equipeRand];
             while(equipePiloto == '*'){
-                equipeRand = gerarNumero(25);
+                equipeRand = gerarNumero(0,25);
                 equipePiloto = equipes[equipeRand];
             }
             inserirFim(l, 50000, cont, equipePiloto, 0);
@@ -200,14 +201,14 @@ void gerarVolta(ListaPilotos* listaTotal, int numeroDePilotos){
     int igual = 1;
     ListaPilotos* listaVolta = criarLista();
     while(cont < numeroDePilotos){
-        pilotoAleatorio = gerarNumero(quantidadePilotos(listaTotal)+1);
+        pilotoAleatorio = gerarNumero(1,quantidadePilotos(listaTotal)+1);
         igual = verificaIgualdade(listaVolta, pilotoAleatorio);
         while(igual == 0){
-            pilotoAleatorio = gerarNumero(quantidadePilotos(listaTotal)+1);
+            pilotoAleatorio = gerarNumero(1,quantidadePilotos(listaTotal)+1);
             igual = verificaIgualdade(listaVolta, pilotoAleatorio);
         }
         
-        inserirFim(listaVolta, gerarNumero(50000), pilotoAleatorio, '*', 0);
+        inserirFim(listaVolta, gerarNumero(10000,20000), pilotoAleatorio, '*', 0);
         cont++;
     }
     guardarMenorTempo(listaTotal, listaVolta);
@@ -220,7 +221,7 @@ void Qualify(ListaPilotos* listaTotal, int voltas){
     int numeroDeCarrosVolta = 0;
     
     for(int cont = 0;cont < voltas;cont++){
-        numeroDeCarrosVolta = gerarNumero(quantidadePilotos(listaTotal));
+        numeroDeCarrosVolta = gerarNumero(0,quantidadePilotos(listaTotal));
         gerarVolta(listaTotal, numeroDeCarrosVolta);
         
     }
@@ -350,6 +351,13 @@ void liberaTodos(ListaPilotos* l){
         p = p->proxPiloto;
     }
 }
+void liberaAte(ListaPilotos* l,int max){
+    Piloto* p = l->inicio;
+    for (int cont = 0;cont<max;cont++){
+        p->vaiCorrer = 0;
+        p = p->proxPiloto;
+    }
+}
 
 int main(){
     int flag = 0;
@@ -365,12 +373,14 @@ int main(){
         imprimirPilotos(l);
         
         elimina7(l,17);
+        liberaAte(l,16);
         
         Qualify(l, QUALIFY2);
         printf("Q2\n");
         claSort(l);
         imprimirPilotos(l);
         elimina7(l,10);
+        liberaAte(l,9);
         
         Qualify(l, QUALIFY3);
         printf("Q3\n");
