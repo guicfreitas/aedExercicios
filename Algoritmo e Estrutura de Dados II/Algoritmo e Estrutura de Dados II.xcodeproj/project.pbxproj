@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7942F52B2634A8A40020A2C0 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 7942F52A2634A8A40020A2C0 /* main.c */; };
+		7942F5322634AE250020A2C0 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 7942F5312634AE250020A2C0 /* main.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +25,7 @@
 /* Begin PBXFileReference section */
 		7934B9AC262A68F800A5D2C5 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		7942F52A2634A8A40020A2C0 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		7942F5312634AE250020A2C0 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		7984E76B26210DE600E630D2 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		798534D4261BC62900356050 /* Algoritmo e Estrutura de Dados II */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Algoritmo e Estrutura de Dados II"; sourceTree = BUILT_PRODUCTS_DIR; };
 		798534D7261BC62900356050 /* mainn.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = mainn.c; path = "/Users/guilherme/Documents/aedExercicios/Algoritmo e Estrutura de Dados II/Algoritmo e Estrutura de Dados II/Treino-01/mainn.c"; sourceTree = "<absolute>"; };
@@ -59,6 +60,14 @@
 			path = "Arvores-02";
 			sourceTree = "<group>";
 		};
+		7942F52F2634AE170020A2C0 /* Arvores-03 */ = {
+			isa = PBXGroup;
+			children = (
+				7942F5312634AE250020A2C0 /* main.c */,
+			);
+			path = "Arvores-03";
+			sourceTree = "<group>";
+		};
 		7984E76926210DC800E630D2 /* Atividade-1 */ = {
 			isa = PBXGroup;
 			children = (
@@ -86,6 +95,7 @@
 		798534D6261BC62900356050 /* Algoritmo e Estrutura de Dados II */ = {
 			isa = PBXGroup;
 			children = (
+				7942F52F2634AE170020A2C0 /* Arvores-03 */,
 				7942F5282634A8910020A2C0 /* Arvores-02 */,
 				7934B9AA262A684100A5D2C5 /* Arvores-01 */,
 				7984E76926210DC800E630D2 /* Atividade-1 */,
@@ -176,7 +186,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7942F52B2634A8A40020A2C0 /* main.c in Sources */,
+				7942F5322634AE250020A2C0 /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
