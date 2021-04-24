@@ -40,3 +40,11 @@ Arv* insereArv (Arv* raiz, Arv* no) {
     return raiz;
 
 }
+
+void printArv(Arv* raiz){
+    if(raiz != NULL){
+        printf("%d",raiz->info);
+        printArv(raiz->esq);
+        printArv(raiz->dir);
+    }
+}
