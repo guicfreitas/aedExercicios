@@ -43,8 +43,43 @@ Arv* insereArv (Arv* raiz, Arv* no) {
 
 void printArv(Arv* raiz){
     if(raiz != NULL){
-        printf("%d",raiz->info);
+        printf("%d ",raiz->info);
         printArv(raiz->esq);
         printArv(raiz->dir);
     }
+}
+
+int contaNos(Arv* raiz){
+    int cont = 0;
+    
+    if(raiz != NULL){
+        cont = cont + 1;
+        cont = cont + contaNos(raiz->esq);
+        cont = cont + contaNos(raiz->dir);
+    }
+    
+    return cont;
+    
+}
+
+
+int main(){
+    int nEntradas = 0;
+    int entrada = 0;
+    scanf("%d",&nEntradas);
+    
+    Arv* raiz = criaVazia();
+    
+    for(int cont = 0;cont<nEntradas;cont++){
+        scanf("%d",&entrada);
+        Arv* novoNo;
+        novoNo = criaNo(entrada);
+        raiz = insereArv(raiz, novoNo);
+        
+        
+    }
+    printf("Total de elementos: %d",contaNos(raiz));
+    
+    
+    return 0;
 }
