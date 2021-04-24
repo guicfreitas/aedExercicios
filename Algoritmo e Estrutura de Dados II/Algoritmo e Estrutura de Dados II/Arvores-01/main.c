@@ -25,11 +25,18 @@ Arv* criaNo(int info){
     
     return novoNo;
 }
+//aceitando numero iguais
+Arv* insereArv (Arv* raiz, Arv* no) {
+    if(raiz == NULL){
+        return no;
+    }
+    
+    if(no->info < raiz->info){
+        raiz->esq = insereArv(raiz->esq, no);
+    }else{
+        raiz->dir = insereArv(raiz->dir, no);
+    }
+    
+    return raiz;
 
-Arv* InsereArv (Arv* raiz, Arv* no) {
-    Arv* a = (Arv*) malloc (sizeof(Arv));
-    a -> info = info;
-    a -> esq = subE;
-    a -> dir = subD;
-    return a;
 }
