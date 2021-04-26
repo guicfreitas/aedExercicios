@@ -25,7 +25,7 @@ Arv* criaNo(int info){
     
     return novoNo;
 }
-//aceitando numero iguais
+// nao aceitando numero iguais
 Arv* insereArv (Arv* raiz, Arv* no) {
     if(raiz == NULL){
         return no;
