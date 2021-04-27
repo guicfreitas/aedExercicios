@@ -11,7 +11,8 @@ typedef struct vaga Vaga;
 typedef struct carro Carro;
 
 char classes[4] = {'M','V','E','C'};
-
+char letras[26] = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+char numeros[9] = {'1','2','3','4','5','6','7','8','9'};
 struct vaga{
     int numero;
     char classe;
@@ -38,14 +39,30 @@ int gerarNumero(int min,int max){
     return random;
 }
 
-Carro* criarCarro(char* placa, char classe, int horaEnt,int minEnt, int horaSaida, int minutoSaida){
+Carro* criarCarro(char classe){
     Carro* novoCarro = (Carro*) malloc(sizeof(Carro));
+    
+    char placa[8];
+    
+    placa[0] = letras[gerarNumero(0, 26)];
+    placa[1] = letras[gerarNumero(0, 26)];
+    placa[2] = letras[gerarNumero(0, 26)];
+    placa[3] = numeros[gerarNumero(0, 9)];
+    placa[4] = numeros[gerarNumero(0, 9)];
+    placa[5] = numeros[gerarNumero(0, 9)];
+    placa[6] = numeros[gerarNumero(0, 9)];
+    placa[7] = '\0';
+    
     
     novoCarro->placa = placa;
     novoCarro->classe = classe;
-    novoCarro->horaEntrada = horaEnt;
-    novoCarro->minutoEntrada = minEnt;
+    int horaEntrada = gerarNumero(1, 24);
+    novoCarro->horaEntrada = horaEntrada;
+    int minutoEntrada = gerarNumero(0, 59);
+    novoCarro->minutoEntrada = minutoEntrada;
+    int horaSaida = gerarNumero(novoCarro->horaEntrada, 10);
     novoCarro->horaSaida = horaSaida;
+    int minutoSaida = gerarNumero(0, 59);
     novoCarro->minutoSaida = minutoSaida;
     
     return novoCarro;
@@ -140,12 +157,19 @@ Vaga* rotacaoDuplaDireita(Vaga* vaga1){
 
 Vaga* insereVagaOcupada(int numeroVaga, Vaga* raiz){
     if(raiz == NULL){
+        
+        
         raiz = (Vaga*) malloc(sizeof(Vaga));
+        raiz->classe = classes[gerarNumero(0, 4)];
+        Carro* novoCarro = criarCarro(raiz->classe);
+        raiz->carro = novoCarro;
+        
         raiz->numero = numeroVaga;
         raiz->altura = 0;
-        raiz->classe = classes[gerarNumero(0, 4)];
+        
         raiz->esq = NULL;
         raiz->dir = NULL;
+        
     }else if(numeroVaga < raiz->numero){
         raiz->esq = insereVagaOcupada(numeroVaga, raiz->esq);
         if(alturaAvl(raiz->esq) - alturaAvl(raiz->dir) == 2){
@@ -203,15 +227,38 @@ void posordem(Vaga* raiz)
     printf("%d ",raiz->numero);
 }
 
-int quantidadeCarrosEstacionando(Vaga* raiz){
+int quantidadeCarrosEstacionado(Vaga* raiz){
     int cont = 0;
     
     if(raiz != NULL){
         cont = cont + 1;
-        cont = cont +  quantidadeCarrosEstacionandos(raiz->esq);
-        cont = cont + quantidadeCarrosEstacionandos(raiz->dir);
+        cont = cont +  quantidadeCarrosEstacionado(raiz->esq);
+        cont = cont + quantidadeCarrosEstacionado(raiz->dir);
     }
     return cont;
+}
+
+float diferencaHora(Carro* carro){
+    float horaTotalS = carro->horaSaida + (carro->minutoSaida/60);
+    float horaTotalE = carro->horaEntrada + (carro->minutoEntrada/60);
+    
+    return horaTotalS - horaTotalE;
+}
+
+float mediaHoras(Vaga* raiz){
+    float total = 0.0;
+    
+    if(raiz != NULL){
+        total = total + diferencaHora(raiz->carro);
+        if(raiz->esq != NULL){
+            total = total + diferencaHora(raiz->esq->carro);
+        }
+        if(raiz->dir != NULL){
+            total = total + diferencaHora(raiz->dir->carro);
+        }
+        
+    }
+    return total;
 }
 
 
@@ -240,8 +287,8 @@ int main(){
                 printf("\n\n");
                 printf("Grafico:\n");
     printf("==============================\n");
-    printf("Quantidade de carros estacionados: %d",quantidadeCarrosEstacionado(raiz));
-    
+    printf("Quantidade de carros estacionados: %d\n",quantidadeCarrosEstacionado(raiz));
+    printf("Media de horas: %0.2f\n",(mediaHoras(raiz)/quantidadeCarrosEstacionado(raiz)));
    
 
     return 0;
