@@ -265,6 +265,7 @@ float mediaHoras(Vaga* raiz){
 
 int main(){
     Vaga* raiz = NULL;
+    int numeroAleatorio = 0;
     srand ((unsigned int)time(NULL) );
     
     printf("Digite o numero de carros estacionados:\n");
@@ -272,7 +273,19 @@ int main(){
     scanf("%d",&numeroEntradas);
     
     for(int cont = 0;cont < numeroEntradas; cont++){
-        raiz = insereVagaOcupada(gerarNumero(0, 1024), raiz);
+        numeroAleatorio = gerarNumero(0, 1024);
+        if(busacaVaga(numeroAleatorio, raiz) == NULL){
+            raiz = insereVagaOcupada(numeroAleatorio, raiz);
+        }else{
+            printf("VAGA JA PREENCHIDA DIRECIONANDO PARA OUTRA VAGA...\n");
+            numeroAleatorio = gerarNumero(0, 1024);
+            while (busacaVaga(numeroAleatorio, raiz) != NULL) {
+                numeroAleatorio = gerarNumero(0, 1024);
+            }
+            raiz = insereVagaOcupada(numeroAleatorio, raiz);
+            
+        }
+        
     }
     printf("==============================\n");
                 printf("IMPRESSAO DA ARVORE:\n\n");
@@ -289,6 +302,10 @@ int main(){
     printf("==============================\n");
     printf("Quantidade de carros estacionados: %d\n",quantidadeCarrosEstacionado(raiz));
     printf("Media de horas: %0.2f\n",(mediaHoras(raiz)/quantidadeCarrosEstacionado(raiz)));
+    
+    
+    
+   
    
 
     return 0;
