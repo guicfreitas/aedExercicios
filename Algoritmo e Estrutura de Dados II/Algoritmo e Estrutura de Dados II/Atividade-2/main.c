@@ -76,7 +76,7 @@ int gerarNumero(int min,int max){
     int random = 0;
     
     
-     random = (min + (rand()%max));
+    random = (min + (rand()%max));
     
     return random;
 }
@@ -249,38 +249,20 @@ Vaga* insereVagaOcupada(int numeroVaga, Vaga* raiz){
     return raiz;
 }
 
-/* Imprime a árvore em ordem */
+
 void emordem(Vaga* raiz)
 {
     if (raiz == NULL)
         return;
- 
+    
     emordem(raiz->esq);
-    printf("%d ",raiz->numero);
+    printf("Vaga: %d\n",raiz->numero);
+    printf("Placa: %s\n",raiz->carro->placa);
+    printf("Valor pago: %0.2f\n\n",raiz->carro->valor);
     emordem(raiz->dir);
 }
- 
-/* Imprime a árvore em pré-ordem */
-void preordem(Vaga* raiz)
-{
-    if (raiz == NULL)
-        return;
- 
-    printf("%d ",raiz->numero);
-    preordem(raiz->esq);
-    preordem(raiz->dir);
-}
- 
-/* Imprime a árvore em pós-ordem */
-void posordem(Vaga* raiz)
-{
-    if (raiz == NULL)
-        return;
- 
-    posordem(raiz->esq);
-    posordem(raiz->dir);
-    printf("%d ",raiz->numero);
-}
+
+
 
 int quantidadeCarrosEstacionado(Vaga* raiz){
     int cont = 0;
@@ -307,11 +289,11 @@ float mediaHoras(Vaga* raiz){
         total = total + diferencaHora(raiz->carro);
         
         
-            total = total + mediaHoras(raiz->esq);
-            
+        total = total + mediaHoras(raiz->esq);
         
-            total = total + mediaHoras(raiz->dir);
-            
+        
+        total = total + mediaHoras(raiz->dir);
+        
         
         
     }
@@ -399,7 +381,7 @@ void verificaHoraMovimentada(Lista* l){
         atual = atual->prox;
     }
     
-    printf("Hora com mais carros estacionados foi as %d com %d carros estacionados.\n",atualMaior->hora,atualMaior->ocorrencia);
+    printf("Hora com mais carros estacionados foi as %d com %d carros estacionados.\n\n",atualMaior->hora,atualMaior->ocorrencia);
 }
 
 Vaga* removeVaga(Vaga* raiz, int nVaga){
@@ -411,7 +393,7 @@ Vaga* removeVaga(Vaga* raiz, int nVaga){
         raiz->esq = removeVaga(raiz->esq, nVaga);
     }else{
         if(nVaga > raiz->numero){
-            raiz->dir = removeVaga(raiz, nVaga);
+            raiz->dir = removeVaga(raiz->dir, nVaga);
         }else{
             Vaga* temp = raiz;
             if((raiz->esq) && (raiz->dir)){
@@ -464,6 +446,14 @@ Vaga* balancearArv(Vaga* raiz){
     return raiz;
 }
 
+void excluirArv(Vaga* raiz){
+    if(raiz != NULL){
+        excluirArv(raiz->dir);
+        excluirArv(raiz->esq);
+        free(raiz);
+    }
+}
+
 int main(){
     Vaga* raiz = NULL;
     int numeroAleatorio = 0;
@@ -499,11 +489,50 @@ int main(){
     insereCarrosPorHora(raiz, listaDeCarrosHora);
     removeRepetidos(listaDeCarrosHora);
     verificaHoraMovimentada(listaDeCarrosHora);
+    int escolha = -1;
+    int vagaPesquisada = 0;
+    while(escolha != 0){
+        printf("Escolha uma das opcoes abaixo:\n");
+        printf("1 - Esvaziar uma vaga específica \n");
+        printf("2 - Esvaziar todas as vagas(todas as vagas serao impressas)\n");
+        printf("0 - Sair\n");
+        
+        scanf("%d",&escolha);
+        
+        switch (escolha) {
+            case 1:
+                printf("Digite a vaga a ser esvaziada: \n");
+                scanf("%d",&vagaPesquisada);
+                Vaga* vagaTemp = busacaVaga(vagaPesquisada, raiz);
+                if(vagaTemp == NULL){
+                    printf("Vaga esta desocupada!\n");
+                }else{
+                    printf("Placa: %s\n",vagaTemp->carro->placa);
+                    printf("Valor pago: %0.2f\n",vagaTemp->carro->valor);
+                    raiz = removeVaga(raiz, vagaPesquisada);
+                    raiz = balancearArv(raiz);
+                }
+                
+                break;
+                
+            case 2:
+                printf("Esvaziando as vagas: \n");
+                emordem(raiz);
+                excluirArv(raiz);
+                escolha = 0;
+                break;
+            case 0:
+                break;
+            default:
+                break;
+        }
+        
+    }
     
     
     
-   
-   
-
+    
+    
+    
     return 0;
 }
