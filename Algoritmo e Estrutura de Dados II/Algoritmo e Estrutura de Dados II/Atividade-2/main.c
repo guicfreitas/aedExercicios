@@ -9,10 +9,25 @@
 #include <time.h>
 typedef struct vaga Vaga;
 typedef struct carro Carro;
+typedef struct no No;
+typedef struct lista Lista;
 
 char classes[4] = {'M','V','E','C'};
 char letras[26] = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
 char numeros[9] = {'1','2','3','4','5','6','7','8','9'};
+
+struct no{
+    int hora;
+    int ocorrencia;
+    No* prox;
+    No* anterior;
+};
+
+struct lista{
+    No* inicio;
+    No* fim;
+};
+
 struct vaga{
     int numero;
     char classe;
@@ -30,6 +45,32 @@ struct carro{
     int horaSaida;
     int minutoSaida;
 };
+
+Lista* criarLista(){
+    Lista* l = malloc(sizeof(Lista));
+    l->inicio=NULL;
+    l->fim=NULL;
+    return l;
+}
+
+void inserirFim(Lista* l,int hora,int ocorrencia){
+    No* novo =(No*) malloc(sizeof(No));
+    novo->hora=hora;
+    novo->ocorrencia = ocorrencia;
+    No* notemp=l->fim;
+    if(l->fim!=NULL){
+        notemp->prox=novo;
+        novo->anterior=notemp;
+        novo->prox=NULL;
+        l->fim=novo;
+    }else{
+        l->inicio=novo;
+        l->fim=novo;
+        novo->prox=NULL;
+        novo->anterior=NULL;
+    }
+}
+
 int gerarNumero(int min,int max){
     int random = 0;
     
@@ -42,7 +83,7 @@ int gerarNumero(int min,int max){
 Carro* criarCarro(char classe){
     Carro* novoCarro = (Carro*) malloc(sizeof(Carro));
     
-    char placa[8];
+    char* placa = (char*)malloc(sizeof(char)*8) ;
     
     placa[0] = letras[gerarNumero(0, 26)];
     placa[1] = letras[gerarNumero(0, 26)];
@@ -239,8 +280,8 @@ int quantidadeCarrosEstacionado(Vaga* raiz){
 }
 
 float diferencaHora(Carro* carro){
-    float horaTotalS = carro->horaSaida + (carro->minutoSaida/60);
-    float horaTotalE = carro->horaEntrada + (carro->minutoEntrada/60);
+    float horaTotalS = (carro->horaSaida * 60) + (carro->minutoSaida);
+    float horaTotalE = (carro->horaEntrada * 60) + (carro->minutoEntrada);
     
     return horaTotalS - horaTotalE;
 }
@@ -250,15 +291,87 @@ float mediaHoras(Vaga* raiz){
     
     if(raiz != NULL){
         total = total + diferencaHora(raiz->carro);
-        if(raiz->esq != NULL){
-            total = total + diferencaHora(raiz->esq->carro);
-        }
-        if(raiz->dir != NULL){
-            total = total + diferencaHora(raiz->dir->carro);
-        }
+        
+        
+            total = total + mediaHoras(raiz->esq);
+            
+        
+            total = total + mediaHoras(raiz->dir);
+            
+        
         
     }
+    
     return total;
+}
+int contCarroPorHora(Vaga* raiz, int hora){
+    int cont = 0;
+    if(raiz != NULL){
+        if(raiz->carro->horaEntrada == hora){
+            cont = cont + 1;
+        }
+        cont = cont + contCarroPorHora(raiz->esq, hora);
+        cont = cont + contCarroPorHora(raiz->dir, hora);
+    }
+    return cont;
+}
+
+void insereCarrosPorHora(Vaga* raiz, Lista* l){
+    if(raiz != NULL){
+        inserirFim(l, raiz->carro->horaEntrada, contCarroPorHora(raiz, raiz->carro->horaEntrada));
+        insereCarrosPorHora(raiz->esq, l);
+        insereCarrosPorHora(raiz->dir, l);
+    }
+}
+void removeNo(Lista* l, No* noRemovido){
+    No* noTemp;
+    No* anterior;
+    No* proximo;
+    if(l->inicio == noRemovido){
+        noTemp = l->inicio->prox;
+        l->inicio = noTemp;
+        l->inicio->anterior = NULL;
+        free(noRemovido);
+    }else if (l->fim == noRemovido){
+        noTemp = l->fim->anterior;
+        l->fim = noTemp;
+        l->fim->prox = NULL;
+        free(noRemovido);
+    }else{
+        anterior = noRemovido->anterior;
+        proximo = noRemovido->prox;
+        
+        anterior->prox = proximo;
+        proximo->anterior = anterior;
+        free(noRemovido);
+    }
+}
+
+void removeRepetidos(Lista* l){
+    No* analisado = l->inicio;
+    No* atual = l->inicio->prox;
+    No* atualTemp;
+    
+    while(analisado != NULL){
+        
+        if(analisado == l->inicio){
+            atual = l->inicio->prox;
+        }else{
+            atual = l->inicio;
+        }
+        
+        while (atual != NULL) {
+            if(analisado->hora == atual->hora && analisado != atual){
+                atualTemp = atual;
+                atual = atual->prox;
+                removeNo(l, atualTemp);
+            }else{
+                atual = atual->prox;
+            }
+            
+        }
+        analisado = analisado->prox;
+    }
 }
 
 
@@ -287,23 +400,15 @@ int main(){
         }
         
     }
-    printf("==============================\n");
-                printf("IMPRESSAO DA ARVORE:\n\n");
-                printf("Em ordem:\n");
-                emordem(raiz);
-                printf("\n\n");
-                printf("Pre ordem:\n");
-                preordem(raiz);
-                printf("\n\n");
-                printf("Pos ordem:\n");
-                posordem(raiz);
-                printf("\n\n");
-                printf("Grafico:\n");
-    printf("==============================\n");
-    printf("Quantidade de carros estacionados: %d\n",quantidadeCarrosEstacionado(raiz));
-    printf("Media de horas: %0.2f\n",(mediaHoras(raiz)/quantidadeCarrosEstacionado(raiz)));
     
+    int qtdCarros = quantidadeCarrosEstacionado(raiz);
+    float mediaH = (mediaHoras(raiz)/qtdCarros)/60.0;
     
+    printf("Quantidade de carros estacionados: %d\n",qtdCarros);
+    printf("Media de horas:%0.2f\n",mediaH);
+    
+    Lista* listaDeCarrosHora = criarLista();
+    insereCarrosPorHora(raiz, listaDeCarrosHora);
     
    
    
