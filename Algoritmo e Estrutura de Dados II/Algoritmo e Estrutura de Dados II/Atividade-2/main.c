@@ -44,6 +44,7 @@ struct carro{
     int minutoEntrada;
     int horaSaida;
     int minutoSaida;
+    float valor;
 };
 
 Lista* criarLista(){
@@ -106,6 +107,11 @@ Carro* criarCarro(char classe){
     int minutoSaida = gerarNumero(0, 59);
     novoCarro->minutoSaida = minutoSaida;
     
+    float valorPagar = ((novoCarro->horaSaida*60) + novoCarro->minutoSaida) - ((novoCarro->horaEntrada*60) + novoCarro->minutoEntrada);
+    
+    valorPagar = valorPagar * 0.05;
+    
+    novoCarro->valor = valorPagar;
     return novoCarro;
 }
 Vaga* busacaVaga(int numero, Vaga* raiz){
@@ -374,7 +380,19 @@ void removeRepetidos(Lista* l){
     }
 }
 
-
+void verificaHoraMovimentada(Lista* l){
+    No* atual = l->inicio->prox;
+    No* atualMaior = l->inicio;
+    
+    while (atual != NULL) {
+        if(atual->ocorrencia > atualMaior->ocorrencia){
+            atualMaior = atual;
+        }
+        atual = atual->prox;
+    }
+    
+    printf("Hora com mais carros estacionados foi as %d com %d carros estacionados.\n",atualMaior->hora,atualMaior->ocorrencia);
+}
 
 int main(){
     Vaga* raiz = NULL;
@@ -390,7 +408,7 @@ int main(){
         if(busacaVaga(numeroAleatorio, raiz) == NULL){
             raiz = insereVagaOcupada(numeroAleatorio, raiz);
         }else{
-            printf("VAGA JA PREENCHIDA DIRECIONANDO PARA OUTRA VAGA...\n");
+            //VAGA ESTA PREENCHIDA DIRENCIONANDO PARA OUTRA VAGA!
             numeroAleatorio = gerarNumero(0, 1024);
             while (busacaVaga(numeroAleatorio, raiz) != NULL) {
                 numeroAleatorio = gerarNumero(0, 1024);
@@ -403,12 +421,14 @@ int main(){
     
     int qtdCarros = quantidadeCarrosEstacionado(raiz);
     float mediaH = (mediaHoras(raiz)/qtdCarros)/60.0;
-    
-    printf("Quantidade de carros estacionados: %d\n",qtdCarros);
-    printf("Media de horas:%0.2f\n",mediaH);
+    printf("\n");
+    printf("Media de carros estacionados: %d\n",qtdCarros);
+    printf("Media de horas: %0.2f\n",mediaH);
     
     Lista* listaDeCarrosHora = criarLista();
     insereCarrosPorHora(raiz, listaDeCarrosHora);
+    removeRepetidos(listaDeCarrosHora);
+    verificaHoraMovimentada(listaDeCarrosHora);
     
    
    
