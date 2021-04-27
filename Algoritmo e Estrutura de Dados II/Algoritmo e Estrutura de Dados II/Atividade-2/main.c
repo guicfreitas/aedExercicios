@@ -6,8 +6,11 @@
 //
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 typedef struct vaga Vaga;
 typedef struct carro Carro;
+
+char classes[4] = {'M','V','E','C'};
 
 struct vaga{
     int numero;
@@ -26,6 +29,15 @@ struct carro{
     int horaSaida;
     int minutoSaida;
 };
+int gerarNumero(int min,int max){
+    int random = 0;
+    
+    
+     random = (min + (rand()%max));
+    
+    return random;
+}
+
 Carro* criarCarro(char* placa, char classe, int horaEnt,int minEnt, int horaSaida, int minutoSaida){
     Carro* novoCarro = (Carro*) malloc(sizeof(Carro));
     
@@ -115,7 +127,7 @@ Vaga* rotacaoDireita(Vaga* vaga1){
 }
 
 Vaga* rotacaoDuplaEsquerda(Vaga* vaga3){
-    vaga3->esq = rotacaoDireita(vaga3->dir);
+    vaga3->esq = rotacaoDireita(vaga3->esq);
     
     return rotacaoEsquerda(vaga3);
 }
@@ -131,6 +143,7 @@ Vaga* insereVagaOcupada(int numeroVaga, Vaga* raiz){
         raiz = (Vaga*) malloc(sizeof(Vaga));
         raiz->numero = numeroVaga;
         raiz->altura = 0;
+        raiz->classe = classes[gerarNumero(0, 4)];
         raiz->esq = NULL;
         raiz->dir = NULL;
     }else if(numeroVaga < raiz->numero){
@@ -156,14 +169,80 @@ Vaga* insereVagaOcupada(int numeroVaga, Vaga* raiz){
     raiz->altura = alturaBalanceada(alturaAvl(raiz->esq), alturaAvl(raiz->dir)) + 1;
     return raiz;
 }
+
+/* Imprime a árvore em ordem */
+void emordem(Vaga* raiz)
+{
+    if (raiz == NULL)
+        return;
+ 
+    emordem(raiz->esq);
+    printf("%d ",raiz->numero);
+    emordem(raiz->dir);
+}
+ 
+/* Imprime a árvore em pré-ordem */
+void preordem(Vaga* raiz)
+{
+    if (raiz == NULL)
+        return;
+ 
+    printf("%d ",raiz->numero);
+    preordem(raiz->esq);
+    preordem(raiz->dir);
+}
+ 
+/* Imprime a árvore em pós-ordem */
+void posordem(Vaga* raiz)
+{
+    if (raiz == NULL)
+        return;
+ 
+    posordem(raiz->esq);
+    posordem(raiz->dir);
+    printf("%d ",raiz->numero);
+}
+
+int quantidadeCarrosEstacionando(Vaga* raiz){
+    int cont = 0;
+    
+    if(raiz != NULL){
+        cont = cont + 1;
+        cont = cont +  quantidadeCarrosEstacionandos(raiz->esq);
+        cont = cont + quantidadeCarrosEstacionandos(raiz->dir);
+    }
+    return cont;
+}
+
+
+
 int main(){
     Vaga* raiz = NULL;
+    srand ((unsigned int)time(NULL) );
     
-    int vaga = 0;
+    printf("Digite o numero de carros estacionados:\n");
+    int numeroEntradas = 0;
+    scanf("%d",&numeroEntradas);
     
-    while(scanf("%d",&vaga)!=EOF){
-        raiz = insereVagaOcupada(vaga, raiz);
+    for(int cont = 0;cont < numeroEntradas; cont++){
+        raiz = insereVagaOcupada(gerarNumero(0, 1024), raiz);
     }
+    printf("==============================\n");
+                printf("IMPRESSAO DA ARVORE:\n\n");
+                printf("Em ordem:\n");
+                emordem(raiz);
+                printf("\n\n");
+                printf("Pre ordem:\n");
+                preordem(raiz);
+                printf("\n\n");
+                printf("Pos ordem:\n");
+                posordem(raiz);
+                printf("\n\n");
+                printf("Grafico:\n");
+    printf("==============================\n");
+    printf("Quantidade de carros estacionados: %d",quantidadeCarrosEstacionado(raiz));
     
+   
+
     return 0;
 }

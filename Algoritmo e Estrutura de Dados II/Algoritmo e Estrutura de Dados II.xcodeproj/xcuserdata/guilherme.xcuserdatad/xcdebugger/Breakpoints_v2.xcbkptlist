@@ -151,15 +151,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "FE1A5C93-E8C6-473E-B328-784740E2B99E"
-            shouldBeEnabled = "Yes"
+            uuid = "98713AE0-6F17-49F3-AFFF-A68EAF5DEEA1"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Algoritmo e Estrutura de Dados II/Atividade-2/main.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "167"
-            endingLineNumber = "167"
+            startingLineNumber = "246"
+            endingLineNumber = "246"
             landmarkName = "main()"
             landmarkType = "9">
          </BreakpointContent>
@@ -167,15 +167,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A2FFA9EB-1E4C-45B0-9C80-721F7C4CE64B"
-            shouldBeEnabled = "Yes"
+            uuid = "6608DF64-CF36-4160-B9C1-00B4ADDC87C9"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Algoritmo e Estrutura de Dados II/Atividade-2/main.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "165"
-            endingLineNumber = "165"
+            startingLineNumber = "244"
+            endingLineNumber = "244"
             landmarkName = "main()"
             landmarkType = "9">
          </BreakpointContent>
