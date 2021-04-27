@@ -137,6 +137,21 @@ Vaga* buscaVagaMaisPerto(Vaga* raiz){
         return buscaVagaMaisPerto(raiz->esq);
     }
 }
+int alturaAvl(Vaga* vaga){
+    if(vaga == NULL){
+        return -1;
+    }else{
+        return vaga->altura;
+    }
+}
+
+int fatorBalanceamento(Vaga* raiz){
+    if(raiz == NULL){
+        return 0;
+    }
+    
+    return alturaAvl(raiz->esq) - alturaAvl(raiz->dir);
+}
 
 Vaga* buscaVagaMaisLonge(Vaga* raiz){
     if(raiz != NULL){
@@ -148,13 +163,6 @@ Vaga* buscaVagaMaisLonge(Vaga* raiz){
     return raiz;
 }
 
-int alturaAvl(Vaga* vaga){
-    if(vaga == NULL){
-        return -1;
-    }else{
-        return vaga->altura;
-    }
-}
 
 int alturaBalanceada(int alturaEq, int alturaDr){
     if(alturaEq > alturaDr){
@@ -394,6 +402,68 @@ void verificaHoraMovimentada(Lista* l){
     printf("Hora com mais carros estacionados foi as %d com %d carros estacionados.\n",atualMaior->hora,atualMaior->ocorrencia);
 }
 
+Vaga* removeVaga(Vaga* raiz, int nVaga){
+    if(raiz == NULL){
+        return NULL;
+    }
+    
+    if(nVaga < raiz->numero){
+        raiz->esq = removeVaga(raiz->esq, nVaga);
+    }else{
+        if(nVaga > raiz->numero){
+            raiz->dir = removeVaga(raiz, nVaga);
+        }else{
+            Vaga* temp = raiz;
+            if((raiz->esq) && (raiz->dir)){
+                Vaga* pai = raiz->dir;
+                raiz = pai->esq;
+                if(raiz){
+                    while(raiz->esq){
+                        pai = raiz;
+                        raiz = raiz->esq;
+                    }
+                    pai->esq = raiz->dir;
+                    raiz->dir = temp->dir;
+                }else{
+                    raiz = pai;
+                    raiz->esq = temp->esq;
+                }
+            }else{
+                if(raiz->esq){
+                    raiz = raiz->esq;
+                }else{
+                    raiz = raiz->dir;
+                }
+                free(temp);
+            }
+        }
+    }
+    return raiz;
+}
+
+Vaga* balancearArv(Vaga* raiz){
+    if(raiz == NULL){
+        return NULL;
+    }
+    int fator = fatorBalanceamento(raiz);
+    
+    if(fator > 1 && fatorBalanceamento(raiz->esq) >= 0){
+        return rotacaoDireita(raiz);
+    }
+    if(fator < -1 && fatorBalanceamento(raiz->dir) <= 0){
+        return rotacaoEsquerda(raiz);
+    }
+    if(fator > 1 && fatorBalanceamento(raiz->esq) < 0){
+        raiz->esq = rotacaoEsquerda(raiz->esq);
+        return rotacaoDireita(raiz);
+    }
+    if(fator < -1 && fatorBalanceamento(raiz->dir) > 0){
+        raiz->dir = rotacaoDireita(raiz->dir);
+        return rotacaoEsquerda(raiz);
+    }
+    return raiz;
+}
+
 int main(){
     Vaga* raiz = NULL;
     int numeroAleatorio = 0;
@@ -429,6 +499,8 @@ int main(){
     insereCarrosPorHora(raiz, listaDeCarrosHora);
     removeRepetidos(listaDeCarrosHora);
     verificaHoraMovimentada(listaDeCarrosHora);
+    
+    
     
    
    
