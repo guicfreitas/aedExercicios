@@ -254,14 +254,21 @@ void emordem(Vaga* raiz)
 {
     if (raiz == NULL)
         return;
-    
-    emordem(raiz->esq);
     printf("Vaga: %d\n",raiz->numero);
     printf("Placa: %s\n",raiz->carro->placa);
     printf("Valor pago: %0.2f\n\n",raiz->carro->valor);
+    emordem(raiz->esq);
     emordem(raiz->dir);
 }
 
+void printVaga(Vaga* raiz)
+{
+    if (raiz == NULL)
+        return;
+    printf("%d ",raiz->numero);
+    printVaga(raiz->esq);
+    printVaga(raiz->dir);
+}
 
 
 int quantidadeCarrosEstacionado(Vaga* raiz){
@@ -502,10 +509,13 @@ int main(){
         switch (escolha) {
             case 1:
                 printf("Digite a vaga a ser esvaziada: \n");
+                printf("Vagas ocupadas: ");
+                printVaga(raiz);
+                printf("\n");
                 scanf("%d",&vagaPesquisada);
                 Vaga* vagaTemp = busacaVaga(vagaPesquisada, raiz);
                 if(vagaTemp == NULL){
-                    printf("Vaga esta desocupada!\n");
+                    printf("Vaga esta desocupada!\n\n");
                 }else{
                     printf("Placa: %s\n",vagaTemp->carro->placa);
                     printf("Valor pago: %0.2f\n",vagaTemp->carro->valor);
